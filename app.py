@@ -58,7 +58,7 @@ season = st.selectbox(
     index=0
 )
 
-    stat_options = [
+stat_options = [
         "passing_yards",
         "passing_tds",
         "interceptions",
