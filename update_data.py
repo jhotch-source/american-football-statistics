@@ -6,7 +6,7 @@ player_url = "https://github.com/nflverse/nflverse-data/releases/download/player
 player_df = pd.read_csv(player_url)
 
 latest_season = df["season"].max()
-df = df[df["season"] == latest_season]
+df = df[df["season"] >= latest_season - 2]
 player_df.to_csv("nfl_data.csv", index=False)
 
 print(f"Saved {len(player_df)} player stat records.")
