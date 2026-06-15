@@ -19,11 +19,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: |
-          pip install pandas
+      - name: Install packages
+        run: pip install pandas
 
-      - name: Update NFL data
+      - name: Run data update
         run: python update_data.py
 
       - name: Commit updated data
