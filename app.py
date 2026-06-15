@@ -69,21 +69,21 @@ stat_options = [
         "receptions"
     ]
 
-    available_stats = [s for s in stat_options if s in df.columns]
+available_stats = [s for s in stat_options if s in df.columns]
 
-    with col2:
+with col2:
         stat = st.selectbox("Statistic", available_stats)
 
-    filtered = df[df["season"] == season]
+filtered = df[df["season"] == season]
 
-    leaders = (
+leaders = (
         filtered.groupby("player_display_name", as_index=False)[stat]
         .sum()
         .sort_values(stat, ascending=False)
         .head(10)
     )
 
-    fig = px.bar(
+fig = px.bar(
         leaders,
         x=stat,
         y="player_display_name",
@@ -91,10 +91,10 @@ stat_options = [
         title=f"Top 10 NFL Players by {stat.replace('_', ' ').title()}"
     )
 
-    fig.update_layout(yaxis={"categoryorder": "total ascending"})
-    st.plotly_chart(fig, use_container_width=True)
+fig.update_layout(yaxis={"categoryorder": "total ascending"})
+st.plotly_chart(fig, use_container_width=True)
 
-    st.dataframe(leaders, use_container_width=True)
+st.dataframe(leaders, use_container_width=True)
 
 # --------------------
 # Team Profiles
