@@ -50,10 +50,13 @@ with tab1:
     col1, col2 = st.columns(2)
 
     with col1:
-        season = st.selectbox(
-            "Season",
-            sorted(df["season"].dropna().unique(), reverse=True)
-        )
+        seasons = sorted(df["season"].dropna().unique(), reverse=True)
+
+season = st.selectbox(
+    "Season",
+    seasons,
+    index=0
+)
 
     stat_options = [
         "passing_yards",
