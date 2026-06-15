@@ -4,6 +4,8 @@ permissions:
   contents: write
 
 on:
+  schedule:
+    - cron: "0 10 * * *"
   workflow_dispatch:
 
 jobs:
@@ -11,5 +13,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Test
-        run: echo "Workflow is working!"
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install pandas
+
+      - name: Update NFL data
+        run: python update_data.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add nfl_data.csv
+          git commit -m "Auto-update NFL data" || echo "No changes"
+          git push
