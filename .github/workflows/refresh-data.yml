@@ -29,6 +29,6 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add nfl_data.csv
+          git add nfl_data.csv pbp_data.csv
           git commit -m "Auto-update NFL data" || echo "No changes"
           git push
