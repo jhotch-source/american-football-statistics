@@ -20,7 +20,18 @@ print("Creating smaller team analytics file...")
 pbp_filtered = pbp_df[
     (pbp_df["season_type"] == "REG") &
     (pbp_df["posteam"].notna())
-]
+].copy()
+
+# Some nflverse versions do not have a direct turnover column,
+# so we create one from interceptions and lost fumbles.
+for col in ["interception", "fumble_lost", "touchdown", "success", "epa", "yards_gained"]:
+    if col not in pbp_filtered.columns:
+        pbp_filtered[col] = 0
+
+pbp_filtered["turnovers"] = (
+    pbp_filtered["interception"].fillna(0) +
+    pbp_filtered["fumble_lost"].fillna(0)
+)
 
 team_analytics = (
     pbp_filtered.groupby("posteam", as_index=False)
@@ -30,7 +41,7 @@ team_analytics = (
         success_rate=("success", "mean"),
         avg_yards_gained=("yards_gained", "mean"),
         total_touchdowns=("touchdown", "sum"),
-        turnovers=("turnover", "sum")
+        turnovers=("turnovers", "sum")
     )
 )
 
