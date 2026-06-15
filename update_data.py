@@ -13,7 +13,12 @@ print(f"Saved {len(player_df)} player stat records.")
 
 print("Downloading play-by-play data...")
 
-pbp_url = "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.csv"
+latest_season = pd.Timestamp.now().year
+
+pbp_url = (
+    f"https://github.com/nflverse/nflverse-data/releases/download/pbp/"
+    f"play_by_play_{latest_season}.csv"
+)
 pbp_df = pd.read_csv(pbp_url, low_memory=False)
 
 print("Creating smaller team analytics file...")
