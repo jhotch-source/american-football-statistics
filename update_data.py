@@ -1,13 +1,19 @@
 import pandas as pd
 
-# Pull current NFL player statistics
-url = "https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats.csv"
+print("Downloading player stats...")
 
-df = pd.read_csv(url)
+player_url = "https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats.csv"
+player_df = pd.read_csv(player_url)
+player_df = player_df[player_df["season"] >= 2024]
+player_df.to_csv("nfl_data.csv", index=False)
 
-# Keep recent seasons
-df = df[df["season"] >= 2024]
+print(f"Saved {len(player_df)} player stat records.")
 
-df.to_csv("nfl_data.csv", index=False)
+print("Downloading play-by-play data...")
 
-print(f"Updated {len(df)} records.")
+pbp_url = "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.csv"
+pbp_df = pd.read_csv(pbp_url, low_memory=False)
+
+pbp_df.to_csv("pbp_data.csv", index=False)
+
+print(f"Saved {len(pbp_df)} play-by-play records.")
