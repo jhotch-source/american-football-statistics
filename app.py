@@ -33,11 +33,12 @@ col3.metric("Seasons", total_seasons)
 
 st.write("NFL player analytics powered by automatically refreshed data.")
 
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "League Analysis",
     "Team Profiles",
     "Player Comparison",
-    "Team Comparison"
+    "Team Comparison",
+    "Advanced Team Analytics"
 ])
 
 # --------------------
