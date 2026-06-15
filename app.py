@@ -11,6 +11,12 @@ st.set_page_config(
 def load_data():
     return pd.read_csv("nfl_data.csv")
 
+@st.cache_data
+def load_team_analytics():
+    return pd.read_csv("team_analytics.csv")
+
+team_analytics = load_team_analytics()
+
 df = load_data()
 
 st.title("American Football Statistics Dashboard")
@@ -214,4 +220,31 @@ with tab4:
         title=f"{team1} vs {team2}"
     )
 
+    st.plotly_chart(fig, use_container_width=True)
+
+# --------------------
+# Advanced Team Analytics
+# --------------------
+
+with tab5:
+    st.header("Advanced Team Analytics")
+
+    st.dataframe(team_analytics, use_container_width=True)
+
+    metric = st.selectbox(
+        "Choose Advanced Metric",
+        ["avg_epa", "success_rate", "avg_yards_gained", "total_touchdowns", "turnovers"]
+    )
+
+    top_teams = team_analytics.sort_values(metric, ascending=False).head(10)
+
+    fig = px.bar(
+        top_teams,
+        x=metric,
+        y="posteam",
+        orientation="h",
+        title=f"Top Teams by {metric.replace('_', ' ').title()}"
+    )
+
+    fig.update_layout(yaxis={"categoryorder": "total ascending"})
     st.plotly_chart(fig, use_container_width=True)
