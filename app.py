@@ -14,6 +14,17 @@ def load_data():
 df = load_data()
 
 st.title("American Football Statistics Dashboard")
+
+total_players = df["player_display_name"].nunique()
+total_teams = df["recent_team"].nunique()
+total_seasons = df["season"].nunique()
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric("Players", total_players)
+col2.metric("Teams", total_teams)
+col3.metric("Seasons", total_seasons)
+
 st.write("NFL player analytics powered by automatically refreshed data.")
 
 tab1, tab2, tab3 = st.tabs([
