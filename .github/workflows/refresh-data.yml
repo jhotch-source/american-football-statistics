@@ -1,0 +1,15 @@
+name: Refresh NFL Data
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test
+        run: echo "Workflow is working!"
