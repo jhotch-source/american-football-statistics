@@ -27,10 +27,11 @@ col3.metric("Seasons", total_seasons)
 
 st.write("NFL player analytics powered by automatically refreshed data.")
 
-tab1, tab2, tab3 = st.tabs([
+tab1, tab2, tab3, tab4 = st.tabs([
     "League Analysis",
     "Team Profiles",
-    "Player Comparison"
+    "Player Comparison",
+    "Team Comparison"
 ])
 
 # --------------------
@@ -172,3 +173,45 @@ with tab3:
     )
 
     st.plotly_chart(fig_compare, use_container_width=True)
+
+# --------------------
+# Team Comparison
+# --------------------
+with tab4:
+    st.header("Team Comparison")
+
+    teams = sorted(df["recent_team"].dropna().unique())
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        team1 = st.selectbox("Team 1", teams, key="team1")
+
+    with col2:
+        team2 = st.selectbox("Team 2", teams, index=1, key="team2")
+
+    team_compare = (
+        df[df["recent_team"].isin([team1, team2])]
+        .groupby("recent_team", as_index=False)[available_stats]
+        .sum()
+    )
+
+    st.dataframe(team_compare, use_container_width=True)
+
+    melted_team = team_compare.melt(
+        id_vars="recent_team",
+        value_vars=available_stats,
+        var_name="Statistic",
+        value_name="Value"
+    )
+
+    fig = px.bar(
+        melted_team,
+        x="Statistic",
+        y="Value",
+        color="recent_team",
+        barmode="group",
+        title=f"{team1} vs {team2}"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
