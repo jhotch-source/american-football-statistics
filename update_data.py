@@ -20,7 +20,7 @@ pbp_season_used = None
 
 for season in range(int(latest_season), int(latest_season) - 4, -1):
     pbp_url = (
-        f"https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_{2025}.parquet"
+        f"https://github.com/nflverse/nflverse-data/releases/download/pbp/"
         f"play_by_play_{season}.csv"
     )
 
