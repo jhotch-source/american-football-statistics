@@ -1,26 +1,21 @@
 import pandas as pd
 
+print("Downloading player stats...")
+
+player_url = "https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats.csv"
+player_df = pd.read_csv(player_url)
+
+player_df = player_df[player_df["season"] >= 2024]
+
+player_df.to_csv("nfl_data.csv", index=False)
+
+print(f"Saved {len(player_df)} player stat records.")
+
 print("Downloading play-by-play data...")
 
-pbp_df = None
-pbp_season_used = None
+pbp_url = "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.csv"
+pbp_df = pd.read_csv(pbp_url, low_memory=False)
 
-for season in range(int(latest_season), int(latest_season) - 4, -1):
-    pbp_url = (
-        f"https://github.com/nflverse/nflverse-data/releases/download/pbp/"
-        f"play_by_play_{season}.csv"
-    )
-
-    try:
-        print(f"Trying play-by-play season {season}...")
-        pbp_df = pd.read_csv(pbp_url, low_memory=False)
-        pbp_season_used = season
-        print(f"Loaded play-by-play data for {season}.")
-        break
-    except Exception:
-        print(f"No play-by-play data found for {season}.")
-if pbp_df is None:
-    raise Exception("Could not download any recent play-by-play data.")
 print("Creating smaller team analytics file...")
 
 pbp_filtered = pbp_df[
@@ -28,6 +23,8 @@ pbp_filtered = pbp_df[
     (pbp_df["posteam"].notna())
 ].copy()
 
+# Some nflverse versions do not have a direct turnover column,
+# so we create one from interceptions and lost fumbles.
 for col in ["interception", "fumble_lost", "touchdown", "success", "epa", "yards_gained"]:
     if col not in pbp_filtered.columns:
         pbp_filtered[col] = 0
@@ -50,8 +47,7 @@ team_analytics = (
 )
 
 team_analytics["success_rate"] = team_analytics["success_rate"] * 100
-team_analytics["season"] = pbp_season_used
 
 team_analytics.to_csv("team_analytics.csv", index=False)
 
-print(f"Saved {len(team_analytics)} team analytics records for {pbp_season_used}.")
+print(f"Saved {len(team_analytics)} team analytics records.")
