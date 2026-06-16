@@ -2,14 +2,14 @@ import pandas as pd
 
 print("Downloading player stats...")
 
-current_year = pd.Timestamp.now().year - 1
+current_year = pd.Timestamp.now().year
 player_df = None
 player_season_used = None
 
 for y in range(current_year, current_year - 4, -1):
     player_url = (
         f"https://github.com/nflverse/nflverse-data/releases/download/player_stats/"
-        f"player_stats_{y}.parquet"
+        f"player_stats_{2025}.parquet"
     )
 
     try:
