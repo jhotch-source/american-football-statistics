@@ -2,7 +2,7 @@ import pandas as pd
 
 print("Downloading player stats...")
 
-current_year = pd.Timestamp.now().year
+current_year = pd.Timestamp.now().year - 1
 player_df = None
 player_season_used = None
 
