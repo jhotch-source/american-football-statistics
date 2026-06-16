@@ -2,23 +2,39 @@ import pandas as pd
 
 print("Downloading player stats...")
 
-player_url = "https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats.csv"
-player_df = pd.read_csv(player_url)
+current_year = pd.Timestamp.now().year
+player_df = None
+player_season_used = None
 
-latest_season = player_df["season"].max()
-player_df = player_df[player_df["season"] >= latest_season - 2]
+for y in range(current_year, current_year - 4, -1):
+    player_url = (
+        f"https://github.com/nflverse/nflverse-data/releases/download/player_stats/"
+        f"player_stats_{y}.parquet"
+    )
+
+    try:
+        print(f"Trying player stats season {y}...")
+        player_df = pd.read_parquet(player_url)
+        player_season_used = y
+        print(f"Loaded player stats for {y}.")
+        break
+    except Exception:
+        print(f"No player stats found for {y}.")
+
+if player_df is None:
+    raise Exception("Could not download any recent player stats.")
 
 player_df.to_csv("nfl_data.csv", index=False)
 
 print(f"Saved {len(player_df)} player stat records.")
-print(f"Latest player season found: {latest_season}")
+print(f"Latest player season found: {player_season_used}")
 
 print("Downloading play-by-play data...")
 
 pbp_df = None
 pbp_season_used = None
 
-for season in range(int(latest_season), int(latest_season) - 4, -1):
+for season in range(int(player_season_used), int(player_season_used) - 4, -1):
     pbp_url = (
         f"https://github.com/nflverse/nflverse-data/releases/download/pbp/"
         f"play_by_play_{season}.csv"
@@ -35,7 +51,6 @@ for season in range(int(latest_season), int(latest_season) - 4, -1):
 
 if pbp_df is None:
     raise Exception("Could not download any recent play-by-play data.")
-
 print("Creating smaller team analytics file...")
 
 pbp_filtered = pbp_df[
